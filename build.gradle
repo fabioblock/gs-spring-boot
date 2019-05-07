@@ -1,0 +1,100 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.5.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+bootJar {
+    baseName = 'gs-spring-boot'
+    version =  '0.1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web") {
+      exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
+    testCompile("junit:junit")
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.11.1'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.1'
+    compile("com.fasterxml.jackson.core:jackson-databind:2.9.3")
+}
+
+
+
+
+
+buildscript {
+
+repositories {
+
+maven { url "https://plugins.gradle.org/m2/"
+
+}
+
+mavenCentral()
+
+}
+
+dependencies {
+
+classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.5.RELEASE")
+
+classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.13.0')
+
+}
+
+}
+
+apply plugin: 'java'
+
+apply plugin: 'eclipse'
+
+apply plugin: 'idea'
+
+apply plugin: 'org.springframework.boot'
+
+apply plugin: 'io.spring.dependency-management'
+
+apply plugin: 'com.palantir.docker'
+
+// This is used as the docker image prefix (org)
+
+group = 'springio'
+
+bootJar {
+
+baseName = 'gs-spring-boot'
+
+version = '0.1.0'
+
+}
+
+docker {
+
+dependsOn build
+
+name "${project.group}/${bootJar.baseName}"
+
+files bootJar.archivePath
+
+buildArgs(['JAR_FILE': "${bootJar.archiveName}"])
+
+}
+
+// The rest after this point is the same
